@@ -43,7 +43,7 @@ export const authOptions = {
       authorization: {
         params: {
           scope: "user-top-read user-read-recently-played user-read-email playlist-read-private playlist-read-collaborative",
-          redirect_uri: "http://127.0.0.1:3000/api/auth/callback/spotify",
+          redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/callback/spotify",
         },
       },
     }),
