@@ -4,6 +4,17 @@ import { useState, useEffect } from "react"
 
 const capitalize = str => str.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
 
+function getTimeAgo(date) {
+  const seconds = Math.floor((new Date() - date) / 1000)
+  if (seconds < 60) return "just now"
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  return `${days}d ago`
+}
+
 export default function Home() {
   const { data: session } = useSession()
   const [personality, setPersonality] = useState(null)
@@ -155,7 +166,7 @@ export default function Home() {
         <div className="nav-inner">
           <div className="logo">SPOTIFY PERSONALITY</div>
           <div className="nav-links">
-            {["home", "artists", "tracks", "playlists", "about"].map(page => (
+            {["home", "artists", "tracks", "recent", "playlists", "about"].map(page => (
               <button
                 key={page}
                 className={`nav-link ${activePage === page ? "nav-link-active" : ""}`}
@@ -364,6 +375,44 @@ export default function Home() {
             )}
           </div>
         )}
+
+        {/* RECENTLY PLAYED */}
+{activePage === "recent" && (
+  <div className="center">
+    <div className="page-header">
+      <h2 className="page-title">Recently Played</h2>
+      <p className="page-sub">Your last 20 tracks</p>
+    </div>
+    {dataLoading ? (
+      <div className="empty-state"><p>Loading your recent tracks...</p></div>
+    ) : (
+      <div className="tracks-list">
+        {rawData?.recentTracks?.map((item, i) => {
+          const track = item.track
+          const playedAt = new Date(item.played_at)
+          const timeAgo = getTimeAgo(playedAt)
+          return (
+            <div className="track-row" key={i}>
+              <span className="track-num">{i + 1}</span>
+              {track.album?.images?.[0]?.url ? (
+                <img src={track.album.images[0].url} alt={track.name} className="track-img" />
+              ) : (
+                <div className="track-img-placeholder">🎵</div>
+              )}
+              <div className="track-info">
+                <div className="track-name">{track.name}</div>
+                <div className="track-artist">{track.artists?.map(a => a.name).join(", ")}</div>
+              </div>
+              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", flexShrink: 0, textAlign: "right" }}>
+                {timeAgo}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )}
+  </div>
+)}
 
         {/* PLAYLISTS */}
         {activePage === "playlists" && (
