@@ -103,10 +103,147 @@ body { background: #0a0a0a; color: white; }
 .empty-state { text-align: center; padding: 80px 20px; color: rgba(255,255,255,0.3); font-size: 15px; }
 .empty-state p { margin-bottom: 24px; }
 
-@media (max-width: 600px) {
-  .grid { grid-template-columns: 1fr; }
+@media (max-width: 768px) {
+  /* NAVBAR — fixed at bottom on mobile like an app */
+  .navbar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    z-index: 100;
+  }
+  .nav-inner {
+    padding: 8px 16px;
+    height: auto;
+    flex-wrap: nowrap;
+    gap: 0;
+  }
+  .logo { display: none; }
+  .nav-right { display: none; }
+  .nav-links {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    gap: 0;
+  }
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  /* ADD BOTTOM PADDING so content doesn't hide behind navbar */
+  .page-content { padding: 24px 16px 80px 16px; }
+  .analyze-section { min-height: calc(100vh - 140px); }
+
+  /* REST OF MOBILE STYLES */
+  .center { max-width: 100%; }
+  .analyze-title { font-size: 56px; }
+  .analyze-btn { padding: 16px 32px; font-size: 15px; }
+  .personality-card { padding: 24px; }
+  .personality-emoji { font-size: 36px; }
+  .personality-type { font-size: 40px; }
+  .personality-desc { font-size: 15px; }
+  .grid { grid-template-columns: 1fr; gap: 12px; }
   .grid-full { grid-column: span 1; }
-  .personality-card { padding: 28px; }
-  .nav-links { gap: 0; }
-  .nav-link { padding: 8px 10px; font-size: 12px; }
+  .artists-grid { grid-template-columns: 1fr; }
+  .track-album { display: none; }
+  .track-row { padding: 12px 14px; }
+  .actions { flex-direction: column; }
+  .btn-secondary, .btn-primary { width: 100%; text-align: center; padding: 14px; }
+  .login-title { font-size: 56px; }
+  .login-btn { padding: 14px 28px; font-size: 15px; }
+  .page-title { font-size: 36px; }
+  .about-card { padding: 20px; }
+  .nav-user { display: none; }
+  .signout-btn { display: none; }
 }
+
+@media (max-width: 480px) {
+  .analyze-title { font-size: 44px; }
+  .personality-type { font-size: 32px; }
+  .login-title { font-size: 44px; }
+  .artist-card { padding: 14px; }
+  .artist-img { width: 52px; height: 52px; }
+}
+
+/* LOADING ANIMATIONS */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.95); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 24px;
+  text-align: center;
+}
+.loading-spinner {
+  width: 56px;
+  height: 56px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #1DB954;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loading-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  animation: pulse 1.5s ease infinite;
+}
+.loading-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.loading-step {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.25);
+  transition: color 0.5s;
+}
+.loading-step-active {
+  color: #1DB954 !important;
+}
+
+/* FADE IN for results */
+.fade-in {
+  animation: fadeInUp 0.5s ease forwards;
+}
+.fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.fade-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* SKELETON LOADING for cards */
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+.skeleton-text { height: 14px; margin-bottom: 10px; }
+.skeleton-title { height: 24px; margin-bottom: 16px; width: 60%; }

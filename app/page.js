@@ -25,6 +25,7 @@ export default function Home() {
   const [playlistStats, setPlaylistStats] = useState(null)
   const [playlistLoading, setPlaylistLoading] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingStep, setLoadingStep] = useState(0)
 
   // Auto-fetch Spotify data when user logs in
   useEffect(() => {
@@ -32,6 +33,21 @@ export default function Home() {
       fetchData()
     }
   }, [session])
+
+  useEffect(() => {
+  if (!loading) return
+  setLoadingStep(0)
+  const interval = setInterval(() => {
+    setLoadingStep(prev => {
+      if (prev >= 3) {
+        clearInterval(interval)
+        return prev
+      }
+      return prev + 1
+    })
+  }, 600)
+  return () => clearInterval(interval)
+}, [loading])
 
   async function fetchData() {
     setDataLoading(true)
@@ -78,6 +94,7 @@ export default function Home() {
 
   async function analyzePersonality() {
     setLoading(true)
+    setLoadingStep(0)
     try {
       let data = rawData
       if (!data) {
@@ -189,17 +206,40 @@ export default function Home() {
         {activePage === "home" && (
           <div className="center">
             {!personality ? (
-              <div className="analyze-section">
-                <h1 className="analyze-title">WHO ARE<br/>YOU?</h1>
-                <p className="analyze-sub">We'll analyze your listening history to find out</p>
-                <button className="analyze-btn" onClick={analyzePersonality} disabled={loading}>
-                  {loading ? "Analyzing your music..." : "Analyze My Personality"}
-                </button>
-              </div>
+  <div className="analyze-section">
+    {loading ? (
+  <div className="loading-screen">
+    <div className="loading-spinner" />
+    <div>
+      <p className="loading-text">Analyzing your music taste...</p>
+      <div className="loading-steps">
+        {[
+          "🎵 Fetching your top artists",
+          "🎤 Analyzing your genres",
+          "🧠 Calculating your personality",
+          "✨ Preparing your results"
+        ].map((step, i) => (
+          <p key={i} className={`loading-step ${i <= loadingStep ? "loading-step-active" : ""}`}>
+            {step}
+          </p>
+        ))}
+      </div>
+    </div>
+  </div>
+    ) : (
+      <>
+        <h1 className="analyze-title">WHO ARE<br/>YOU?</h1>
+        <p className="analyze-sub">We'll analyze your listening history to find out</p>
+        <button className="analyze-btn" onClick={analyzePersonality}>
+          Analyze My Personality
+        </button>
+      </>
+    )}
+  </div>
             ) : (
               <>
                 {/* PERSONALITY RESULT CARD */}
-                <div className="personality-card" style={{ borderColor: personality.accentColor + "33" }}>
+                <div className="personality-card fade-in" style={{ borderColor: personality.accentColor + "33" }}>
                   <span className="personality-emoji">{personality.emoji}</span>
                   <h2 className="personality-type" style={{ color: personality.accentColor }}>
                     {personality.personalityType}
@@ -274,7 +314,7 @@ export default function Home() {
                 </div>
 
                 <div className="grid">
-                  <div className="card">
+                  <div className="card fade-in fade-in-delay-1">
                     <div className="card-title">Top Genres</div>
                     {personality.topGenres.length > 0 ? personality.topGenres.map((genre, i) => (
                       <div className="item" key={i}>
@@ -284,7 +324,7 @@ export default function Home() {
                       </div>
                     )) : <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "14px" }}>No genre data</span>}
                   </div>
-                  <div className="card">
+                  <div className="card fade-in fade-in-delay-2">
                     <div className="card-title">Top Artists</div>
                     {personality.topArtists.map((artist, i) => (
                       <div className="item" key={i}>
@@ -293,7 +333,7 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
-                  <div className="card grid-full">
+                  <div className="card grid-full fade-in fade-in-delay-3">
                     <div className="card-title">Top Tracks</div>
                     {personality.topTracks.map((track, i) => (
                       <div className="item" key={i}>

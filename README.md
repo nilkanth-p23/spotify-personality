@@ -21,28 +21,28 @@ Discover your music personality based on your Spotify listening history.
 ## Getting Started
 
 1. Clone the repo
-   \`\`\`bash
+   ```bash
    git clone https://github.com/YOURUSERNAME/spotify-personality.git
    cd spotify-personality
-   \`\`\`
+   ```
 
 2. Install dependencies
-   \`\`\`bash
+   ```bash
    npm install
-   \`\`\`
+   ```
 
 3. Create `.env.local` with your Spotify credentials
-   \`\`\`bash
+   ```bash
    SPOTIFY_CLIENT_ID=your_client_id
    SPOTIFY_CLIENT_SECRET=your_client_secret
    NEXTAUTH_URL=http://127.0.0.1:3000
    NEXTAUTH_SECRET=your_secret
-   \`\`\`
+   ```
 
 4. Run locally
-   \`\`\`bash
+   ```bash
    npm run dev
-   \`\`\`
+   ```
 
 ## How It Works
 1. User logs in with their Spotify account
